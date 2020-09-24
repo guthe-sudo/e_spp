@@ -1,185 +1,162 @@
 <template>
-    <div>
-        <div class="content">
-            <div class="container-fluid">
-                <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
-                <div
-                    class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20"
-                >
-                    <p class="_title0">
-                        Daftar Tarif
-                        <Button @click="addModal = true"
-                            ><Icon type="md-add" /> add Tarif</Button
-                        >
-                    </p>
-                    <div class="container-fluid">
-                        <table class="_table">
-                            <!-- TABLE TITLE -->
-                            <tr>
-                                <th>ID</th>
-                                <th>Waktu</th>
-                                <th>Harga</th>
-                                <th>Action</th>
-                            </tr>
-                            <!-- ITEMS -->
-                            <tr v-for="(fare, i) in fares" :key="i">
-                                <td>{{ fare.id }}</td>
-                                <td class="_table_name">
-                                    {{ fare.waktu }}
-                                </td>
-                                <td>{{ fare.harga }}</td>
-                                <td>
-                                    <Button
-                                        type="info"
-                                        size="small"
-                                        @click="showEditModal(fare, i)"
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        type="error"
-                                        size="small"
-                                        @click="showDeletingModal(fare, i)"
-                                        :loading="fare.isDeleting"
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- modal untuk tambah fare -->
-                <Modal
-                    v-model="addModal"
-                    title="Add fare"
-                    :styles="{ top: '20px' }"
-                    :mask-closable="false"
-                    :closable="false"
-                >
-                    <Form v-model="addModal" class="col-14">
-                        <div class="form-group row">
-                            <label for="waktu" class="col-3 col-form-label"
-                                >Waktu</label
-                            >
-                            <div class="col-9">
-                                <TimePicker
-                                    type="time"
-                                    placeholder="Select time"
-                                    style="width: 168px"
-                                    v-model="data.waktu"
-                                ></TimePicker>
-                                <Input v-model="data.waktu" hidden />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="harga" class="col-3 col-form-label"
-                                >Harga</label
-                            >
-                            <div class="col-9">
-                                <Input v-model="data.harga" />
-                            </div>
-                        </div>
-                    </Form>
-                    <div slot="footer">
-                        <Button type="default" @click="addModal = false"
-                            >Close</Button
-                        >
-                        <Button
-                            type="primary"
-                            @click="addFare"
-                            :disabled="isAdding"
-                            :loading="isAdding"
-                            >{{ isAdding ? "Adding.." : "Add fare" }}</Button
-                        >
-                    </div>
-                </Modal>
-
-                <!-- modal untuk edit fare -->
-                <Modal
-                    v-model="editModal"
-                    title="Edit Fare"
-                    :styles="{ top: '20px' }"
-                    :mask-closable="false"
-                    :closable="false"
-                >
-                    <Form v-model="editModal" class="col-14">
-                        <div class="form-group row">
-                            <label for="waktu" class="col-3 col-form-label"
-                                >waktu</label
-                            >
-                            <div class="col-9">
-                                <TimePicker
-                                    type="time"
-                                    placeholder="Select time"
-                                    style="width: 168px"
-                                    v-model="editData.waktu"
-                                ></TimePicker>
-                                <Input v-model="editData.waktu" hidden />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="harga" class="col-3 col-form-label"
-                                >Harga</label
-                            >
-                            <div class="col-9">
-                                <Input v-model="editData.harga" />
-                            </div>
-                        </div>
-                    </Form>
-                    <div slot="footer">
-                        <Button type="default" @click="editModal = false"
-                            >Close</Button
-                        >
-                        <Button
-                            type="primary"
-                            @click="editFare"
-                            :disabled="isAdding"
-                            :loading="isAdding"
-                            >{{ isAdding ? "Editing.." : "Edit fare" }}</Button
-                        >
-                    </div>
-                </Modal>
-
-                <!-- modal untuk delete fare -->
-                <Modal
-                    v-model="showDeleteModal"
-                    width="360"
-                    :styles="{ top: '20px' }"
-                >
-                    <p slot="header" style="color:#f60;text-align:center">
-                        <Icon type="ios-information-circle"></Icon>
-                        <span>Delete confirmation</span>
-                    </p>
-                    <div style="text-align:center">
-                        <p>Apakah anda yakin akan menghapus fare ini?</p>
-                    </div>
-                    <div slot="footer">
-                        <Button
-                            type="error"
-                            size="large"
-                            long
-                            :loading="isDeleting"
-                            :disabled="isDeleting"
-                            @click="deleteFare"
-                            >Delete</Button
-                        >
-                    </div>
-                </Modal>
+  <v-card class="d-block pa-2 accent-4 black--text">
+    <v-breadcrumbs :items="items">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item
+          :href="item.href"
+          :disabled="item.disabled"
+        >{{ item.text.toUpperCase() }}</v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+    <v-banner>
+      List Tarif
+      <v-dialog v-model="addModal" persistent max-width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn depressed x-small class="blue white--text" dark v-bind="attrs" v-on="on">
+                <v-icon x-small>mdi-plus</v-icon>
+                <span>Add Tarif</span> 
+                </v-btn>
+        </template>
+        <v-card v-model="addModal">
+          <v-card-title>
+            <span class="headline">Add Tarif</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                    <v-select v-model="data.waktu" :items="item" label="Pilih Waktu*"></v-select>
+                  </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="data.harga" for="harga" label="Harga*" type="int"></v-text-field>
+                </v-col>
+                </v-row>
+            </v-container>
+            <small>*haris diisi</small>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn type="default" color="blue darken-1" text @click="addModal = false">Batal</v-btn>
+            <v-btn
+              color="blue darken-2"
+              text
+              @click="addFare"
+              :disabled="isAdding"
+              :loading="isAdding"
+            >{{ isAdding ? "Adding.." : "Add Tarif" }}</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-banner>
+    <v-card class="mx-auto" max-width="auto" outlined>
+      <v-simple-table dense class="d-flex flex-column-reverse">
+        <thead>
+          <tr class="_table">
+            <th class="text-left">ID</th>
+            <th class="text-left">Waktu</th>
+            <th class="text-left">Harga</th>
+            <th class="text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(fare, i) in fares" :key="i">
+            <td>{{ fare.id }}</td>
+            <td>{{ fare.waktu }}</td>
+            <td>{{ fare.harga }}</td>
+            <td>
+            <v-btn depressed x-small class="light-blue white--text" @click="showEditModal(fare, i)">
+                  <v-icon small>mdi-pencil</v-icon>
+                  <span>Edit</span>        
+            </v-btn>
+              <v-btn depressed x-small class="red white--text"
+                @click="showDeletingModal(fare, i)"
+                :loading="fare.isDeleting">
+                  <v-icon small>mdi-trash-can-outline</v-icon>
+                  <span>Delete</span>
+                </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-simple-table>
+    </v-card>
+    <v-dialog v-model="editModal" persistent max-width="550px">
+      <v-card v-model="editModal">
+        <v-card-title>
+          <span class="headline">Edit Tarif</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                    <v-select v-model="editData.waktu" :items="item" label="Pilih Waktu"></v-select>
+                </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="editData.harga" for="harga" label="Harga*" type="int"></v-text-field>
+              </v-col>
+              </v-row>
+          </v-container>
+          <small>*haris diisi</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn type="default" color="blue darken-1" text @click="editModal = false">Batal</v-btn>
+          <v-btn
+            color="blue darken-2"
+            text
+            @click="editFare"
+            :disabled="isAdding"
+            :loading="isAdding"
+          >{{ isAdding ? "Adding.." : "Edit Tarif" }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <Modal v-model="showDeleteModal" width="360" :styles="{ top: '20px' }">
+            <p slot="header" style="color:#f60;text-align:center">
+              <Icon type="ios-information-circle"></Icon>
+              <span>Delete confirmation</span>
+            </p>
+            <div style="text-align:center">
+              <p>Apakah anda yakin akan menghapus fare ini?</p>
             </div>
-        </div>
-    </div>
+            <div slot="footer">
+              <Button
+                type="error"
+                size="small"
+                long
+                :loading="isDeleting"
+                :disabled="isDeleting"
+                @click="deleteFare"
+              >Delete</Button>
+            </div>
+          </Modal>
+          <v-spacer></v-spacer>
+          <v-banner class="text-center">
+            <v-pagination
+              v-model="page"
+              :length="4"
+              prev-icon="mdi-menu-left"
+              next-icon="mdi-menu-right"
+            ></v-pagination>
+          </v-banner>
+  </v-card>
 </template>
+
+
 
 <script>
 export default {
     data() {
         return {
             data: {
-                waktu: "time",
+                waktu: "",
                 harga: ""
             },
+            select: '',
+            item: [
+                'Pagi-Siang (06.00-12.00)',
+                'Siang-Sore (12.00-18.00)',
+                'Sore-Malam (18.00-24.00)',
+            ],
             addModal: false,
             editModal: false,
             isAdding: false,
@@ -188,11 +165,30 @@ export default {
                 waktu: "",
                 harga: ""
             },
+            select: '',
+            item: [
+                'Pagi-Siang (06.00-12.00)',
+                'Siang-Sore (12.00-18.00)',
+                'Sore-Malam (18.00-24.00)',
+            ],
             index: -1,
             showDeleteModal: false,
             isDeleting: false,
             deleteItem: {},
-            DeletingIndex: -1
+            DeletingIndex: -1,
+            page: 1,
+            items: [
+        {
+          text: 'Home',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Tarif',
+          disabled: false,
+          href: '/fare',
+        },
+      ],
         };
     },
     methods: {

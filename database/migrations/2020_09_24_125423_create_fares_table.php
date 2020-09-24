@@ -15,8 +15,8 @@ class CreateFaresTable extends Migration
     {
         Schema::create('fares', function (Blueprint $table) {
             $table->id();
-            $table->time('waktu');
-            $table->string('harga');
+            $table->string('waktu');
+            $table->char('harga');
             $table->timestamps();
         });
     }
