@@ -25,10 +25,13 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                    <v-select v-model="data.waktu" :items="item" label="Pilih Waktu*"></v-select>
-                  </v-col>
+                  <v-text-field v-model="data.nama" for="nama" label="Nama*" type="text"></v-text-field>
+                </v-col>
                 <v-col cols="12">
                   <v-text-field v-model="data.harga" for="harga" label="Harga*" type="int"></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                    <v-select v-model="data.keterangan" :items="item" label="Pilih Keterangan*"></v-select>
                 </v-col>
                 </v-row>
             </v-container>
@@ -53,16 +56,18 @@
         <thead>
           <tr class="_table">
             <th class="text-left">ID</th>
-            <th class="text-left">Waktu</th>
+            <th class="text-left">Nama</th>
             <th class="text-left">Harga</th>
+            <th class="text-left">Keterangan</th>
             <th class="text-left">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(fare, i) in fares" :key="i">
             <td>{{ fare.id }}</td>
-            <td>{{ fare.waktu }}</td>
+            <td>{{ fare.nama }}</td>
             <td>{{ fare.harga }}</td>
+            <td>{{ fare.keterangan }}</td>
             <td>
             <v-btn depressed x-small class="light-blue white--text" @click="showEditModal(fare, i)">
                   <v-icon small>mdi-pencil</v-icon>
@@ -88,10 +93,13 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                    <v-select v-model="editData.waktu" :items="item" label="Pilih Waktu"></v-select>
-                </v-col>
+                <v-text-field v-model="editData.nama" for="nama" label="Nama*" type="text"></v-text-field>
+              </v-col>
               <v-col cols="12">
                 <v-text-field v-model="editData.harga" for="harga" label="Harga*" type="int"></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                    <v-select v-model="editData.keterangan" :items="item" label="Pilih Keterangan"></v-select>
               </v-col>
               </v-row>
           </v-container>
@@ -148,8 +156,9 @@ export default {
     data() {
         return {
             data: {
-                waktu: "",
-                harga: ""
+                nama: "",
+                harga: "",
+                keterangan: "",
             },
             select: '',
             item: [
@@ -162,8 +171,9 @@ export default {
             isAdding: false,
             fares: [],
             editData: {
-                waktu: "",
-                harga: ""
+                nama: "",
+                harga: "",
+                keterangan: "",
             },
             select: '',
             item: [
@@ -193,10 +203,12 @@ export default {
     },
     methods: {
         async addFare() {
-            if (this.data.waktu.trim() == "") {
-                return this.swr("Tag waktu is required");
+            if (this.data.nama.trim() == "") {
+                return this.swr("Tag nama is required");
             } else if (this.data.harga.trim() == "") {
                 return this.swr("Tag harga is required");
+            } else if (this.data.keterangan.trim() == "") {
+                return this.swr("Tag keterangan is required");
             }
             const res = await this.callApi(
                 "post",
@@ -208,14 +220,17 @@ export default {
                 this.fares.unshift(res.data);
                 this.s("fare berhasil ditambahkan");
                 this.addModal = false;
-                this.data.waktu = "";
+                this.data.nama = "";
                 this.data.harga = "";
+                this.data.keterangan = "";
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.waktu) {
-                        this.e(res.data.errors.waktu[0]);
+                    if (res.data.errors.nama) {
+                        this.e(res.data.errors.nama[0]);
                     } else if (res.data.errors.harga) {
                         this.e(res.data.errors.harga[0]);
+                    } else if (res.data.errors.keterangan) {
+                        this.e(res.data.errors.keterangan[0]);
                     }
                 } else {
                     this.swr();
@@ -223,10 +238,12 @@ export default {
             }
         },
         async editFare() {
-            if (this.editData.waktu.trim() == "") {
-                return this.swr("Tag waktu is required");
+            if (this.editData.nama.trim() == "") {
+                return this.swr("Tag nama is required");
             } else if (this.editData.harga.trim() == "") {
                 return this.swr("Tag harga is required");
+            } else if (this.editData.keterangan.trim() == "") {
+                return this.swr("Tag keterangan is required");
             }
             const res = await this.callApi(
                 "post",
@@ -235,16 +252,19 @@ export default {
             );
 
             if (res.status === 200) {
-                this.fares[this.index].waktu = this.editData.waktu;
+                this.fares[this.index].nama = this.editData.nama;
                 this.fares[this.index].harga = this.editData.harga;
+                this.fares[this.index].keterangan = this.editData.keterangan;
                 this.s("fare berhasil diubah");
                 this.editModal = false;
             } else {
                 if (res.status === 422) {
-                    if (res.data.errors.waktu) {
-                        this.e(res.data.errors.waktu[0]);
+                    if (res.data.errors.nama) {
+                        this.e(res.data.errors.nama[0]);
                     } else if (res.data.errors.harga) {
                         this.e(res.data.errors.harga[0]);
+                    } else if (res.data.errors.keterangan) {
+                        this.e(res.data.errors.keterangan[0]);
                     }
                 } else {
                     this.swr();
@@ -254,8 +274,9 @@ export default {
         showEditModal(fare, index) {
             let obj = {
                 id: fare.id,
-                waktu: fare.waktu,
-                harga: fare.harga
+                nama: fare.nama,
+                harga: fare.harga,
+                keterangan: fare.keterangan,
             };
             this.editData = obj;
             this.editModal = true;

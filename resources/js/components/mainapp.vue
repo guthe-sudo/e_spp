@@ -45,6 +45,14 @@
                 <v-list-item-title>List Member</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item link to="/booking">
+              <v-list-item-action>
+                <v-icon>mdi-book-open</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Booking</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-list-item a href="/logout">
               <v-list-item-action>
                 <v-icon>mdi-logout</v-icon>
@@ -68,9 +76,9 @@
           <span class="white--text">Guthe {{ new Date().getFullYear() }}</span>
         </v-footer>
           </div>
-        <v-main class="d-flex">
+        <v-content class="mt-10 ml-10 mr-10 mb-auto d-flex">
         <router-view/>
-        </v-main>
+        </v-content>
         </Layout>
   </v-app>
 </template>

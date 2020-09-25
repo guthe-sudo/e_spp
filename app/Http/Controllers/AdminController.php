@@ -90,24 +90,28 @@ class AdminController extends Controller
     public function addFare(Request $request) {
         //validate request
         $this->validate($request, [
-            'waktu' => 'required',
+            'nama' => 'required',
             'harga' => 'required',
+            'keterangan' => 'required',
         ]);
         return Fare::create([
-            'waktu' => $request->waktu,
+            'nama' => $request->nama,
             'harga' => $request->harga,
+            'keterangan' => $request->keterangan,
         ]);
     }
     public function editFare(Request $request) {
         //validate request
         $this->validate($request, [
-            'waktu' => 'required',
+            'nama' => 'required',
             'harga' => 'required',
+            'keterangan' => 'required',
             'id' => 'required',
         ]);
         return Fare::where('id', $request->id)->update([
-            'waktu' => $request->waktu,
+            'nama' => $request->nama,
             'harga' => $request->harga,
+            'keterangan' => $request->keterangan,
         ]);
     }
     public function deleteFare(Request $request) {
