@@ -10173,9 +10173,9 @@ textarea {
     resize: none !important;
 }
 ._box_shadow {
-    background: #fff;
-    /*box-shadow: 0px 2px 28px 0px rgba(48, 48, 48, 0.1);
-    box-shadow: 0px 2px 18px 0px rgba(186, 212, 247, 0.43);*/
+    background:lightblue;
+    box-shadow: 0px 2px 28px 0px rgba(48, 48, 48, 0.1);
+    box-shadow: 0px 2px 18px 0px rgba(186, 212, 247, 0.43);
     -webkit-box-shadow: 0 10px 20px rgba(47, 91, 231, 0.1);
     box-shadow: 0 10px 20px rgba(47, 91, 231, 0.1);
 }
@@ -10794,17 +10794,21 @@ li.activeclass {
 }
 /*TABLE*/
 ._table {
-  background: #96cef3;
+  background: #f3f3f3;
 }
 ._table tr:first-child {
-    background: #a7ccff;
+    background: #f3f3f3;
     background: #fff;
+    height: 30px;
 }
 ._table tr:first-child:hover{
     background: #0099ff;
+    height: 30px;
 }
 ._table tr:hover, ._table tr:nth-child(even):hover {
     background: #ecf9ff;
+    height: 30px;
+
 }
 ._table tr:nth-child(even) {
     background: #ececec8c;
@@ -10812,25 +10816,24 @@ li.activeclass {
 ._table tr th {
     border: 1px solid transparent;
     text-align: left;
-    padding: 8px 13px;
+    padding: 13px 13px;
     color: #fff;
     font-size: 15px;
 }
 ._table tr td {
     border: 1px solid #f3f3f3;
     text-align: left;
-    padding: 8px 13px;
-    min-width: 103px;
+    padding: 13px 13px;
     font-size: 15px;
 }
+
 /*TABLE*/
 /*========= 7.AUDIT =======*/
 
 /*========= 8.FOOTER =======*/
 .footer {
-    background: #2d8cf0;
-    color: #fff;
-    padding: 32px 0 29px;
+  text-align: right;
+  text-emphasis-color: white;
 }
 .footer_ul {
     text-align: right;
@@ -10981,12 +10984,11 @@ li.activeclass {
 ._1adminOverveiw_card {
     display: absolute;
     padding: 20px 14px;
-    color: #0099ff !important;
+    color: #0099ff;
 }
 ._1adminOverveiw_card_left {
     flex: 1 1;
 }
-._1adminOverveiw_card_right{}
 ._1adminOverveiw_card_right i {
     font-size: 43px;
 }
@@ -13088,9 +13090,14 @@ width: 40px;
 margin-top: 10px;
 }
 ._login{
-  margin: 0 auto;
-  margin-top: 50px;
+  width: auto;
+  text-align: center;
 }
+._login5{
+  height: auto;
+  text-align: center;
+}
+
 .menu-icon{
   transition: all .3s;
 }
@@ -13235,4 +13242,67 @@ margin-top: 10px;
   100% {
     opacity: 1;
   }
+}
+/* For mobile phones: */
+[class*="col-"] {
+  width: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .col-s-1 {width: 8.33%;}
+  .col-s-2 {width: 16.66%;}
+  .col-s-3 {width: 25%;}
+  .col-s-4 {width: 33.33%;}
+  .col-s-5 {width: 41.66%;}
+  .col-s-6 {width: 50%;}
+  .col-s-7 {width: 58.33%;}
+  .col-s-8 {width: 66.66%;}
+  .col-s-9 {width: 75%;}
+  .col-s-10 {width: 83.33%;}
+  .col-s-11 {width: 91.66%;}
+  .col-s-12 {width: 100%;}
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+.center_button{
+  margin: 20px;
+}
+.basil {
+  background-color: #eff5fa !important;
+}
+.basil--text {
+  color: #356859 !important;
+}
+.upnav{
+  text-align: center;
+}
+.email{
+  margin-top: 10px;
+}
+.card1{
+  padding: 50px;
+}
+
+/* CSS login */
+section{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(-30deg, #03a9f4 0%, #3a78b3 50%, #262626 50%, #606060 100%);
 }

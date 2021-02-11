@@ -13,6 +13,7 @@ export default new Vuex.Store({
             isDeleted: false
         },
         user: false,
+        //member: false,
         //userPermission: null
     },
     getters: {
@@ -48,6 +49,9 @@ export default new Vuex.Store({
         updateUser(state, data) {
             state.user = data;
         },
+        // updateUser(state, data) {
+        //     state.member = data;
+        // },
         // setUserPermission(state, data) {
         //     state.userPermission = data;
         // }

@@ -16,29 +16,17 @@ class AdminCheck
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::attempt(['email'=> $request->email, 'password' => $request->password ])) {
-            $user = Auth::user();
-            if($user->userType == 'Admin') {
-                Auth::check();
-                return response()->json([
-                    'msg' => 'Kamu berhasil Login',
-                    'user' => $user
-                ]);
-            }
-            else if($user->userType == 'User') {
-                Auth::logout();
-                return response()->json([
-                    'msg' => 'Login Gagal'
-                ], 401);
-            }   
+        if($request->path() == 'app/admin_login') {
+            return $next($request);    
         }
         if(!Auth::check()){
             return response()->json([
-                'msg' => 'kamu tidak berhak mengakses halaman ini'
+                'msg' => 'kamu tidak berhak mengakses halaman ini',
+                'url' => $request->path()
             ],402);
         }
         $user = Auth::user();
-            if($user->userType=='User'){
+            if($user->role->isAdmin == "Tidak"){
                 return response()->json([
                     'msg' => 'kamu tidak berhak mengakses halaman ini'
                 ],402);
@@ -46,4 +34,4 @@ class AdminCheck
 
         return $next($request);
     }
-}
+}   

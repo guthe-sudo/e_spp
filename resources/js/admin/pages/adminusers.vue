@@ -1,5 +1,5 @@
 <template>
-  <v-card class="d-block pa-2 accent-4 black--text">
+  <v-card class="d-block pa-2 accent-4 black--text basil">
     <v-breadcrumbs :items="items">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
@@ -8,11 +8,12 @@
         >{{ item.text.toUpperCase() }}</v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    <v-banner>
-      List Admin
+    <v-toolbar flat>
+      <span> List Admin </span>
+      <v-spacer></v-spacer>
       <v-dialog v-model="addModal" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn depressed x-small class="blue white--text" dark v-bind="attrs" v-on="on">
+          <v-btn depressed x-small class="green white--text" dark v-bind="attrs" v-on="on">
                 <v-icon x-small>mdi-plus</v-icon>
                 <span>Add user</span> 
                 </v-btn>
@@ -25,18 +26,41 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field v-model="data.fullName" for="fullName" label="Nama Lengkap*" type="text"></v-text-field>
+                  <v-text-field
+                    v-model="data.fullName"
+                    for="fullName"
+                    label="Nama Lengkap*"
+                    type="text"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field v-model="data.email" for="email" label="Email*" type="email"></v-text-field>
+                  <v-text-field
+                    v-model="data.email"
+                    for="email"
+                    label="Email*"
+                    type="email"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field v-model="data.password" for="password" label="Password*" type="password"></v-text-field>
+                  <v-text-field
+                    v-model="data.password"
+                    for="password"
+                    label="Password*"
+                    type="password"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                    <v-select v-model="data.userType" :items="item" label="Pilih userType"></v-select>
-                  </v-col>
-              </v-row>
+                  <v-select
+                    label="Pilih Hak Akses"
+                    v-model="data.id_role"
+                    for="id_role"
+                    :items="role"
+                    item-value="id_role"
+                    item-text="roleName"
+                  >
+                  </v-select>
+                </v-col>
+                </v-row>
             </v-container>
             <small>*haris diisi</small>
           </v-card-text>
@@ -46,32 +70,34 @@
             <v-btn
               color="blue darken-2"
               text
-              @click="addAdmin"
+              @click="addAdmin(); getAdmin()"
               :disabled="isAdding"
               :loading="isAdding"
             >{{ isAdding ? "Adding.." : "Add Admin" }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-banner>
+    </v-toolbar>
     <v-card class="mx-auto" max-width="auto" outlined>
       <v-simple-table dense class="d-flex flex-column-reverse">
         <thead>
           <tr  class="_table">
-            <th class="text-left">ID</th>
-            <th class="text-left">Nama Lengkap</th>
-            <th class="text-left">Email</th>
-            <th class="text-left">Created At</th>
-            <th class="text-left">Action</th>
+            <th class="text-center">No</th>
+            <th class="text-center">Nama Lengkap</th>
+            <th class="text-center">Email</th>
+            <th class="text-center">Hak Akses</th>
+            <th class="text-center">Created At</th>
+            <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(user, i) in users" :key="i">
-            <td>{{ user.id }}</td>
-            <td>{{ user.fullName }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.created_at | formatDate}}</td>
-            <td>
+            <td class="text-center">{{ i+1 }}</td>
+            <td class="text-center">{{ user.fullName }}</td>
+            <td class="text-center">{{ user.email }}</td>
+            <td class="text-center">{{ user.roleName }}</td>
+            <td class="text-center">{{ user.created_at | formatDate}}</td>
+            <td class="text-center">
             <v-btn depressed x-small class="light-blue white--text" @click="showEditModal(user, i)">
                   <v-icon small>mdi-pencil</v-icon>
                   <span>Edit</span>        
@@ -94,21 +120,44 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field v-model="editData.fullName" for="fullName" label="Nama Lengkap*" type="text"></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field v-model="editData.email" for="email" label="Email*" type="email"></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field v-model="editData.password" for="password" label="Password*" type="password"></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                    <v-select v-model="data.userType" :items="item" label="Pilih userType"></v-select>
-                  </v-col>
-            </v-row>
-          </v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="editData.fullName"
+                    for="fullName"
+                    label="Nama Lengkap*"
+                    type="text"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="editData.email"
+                    for="email"
+                    label="Email*"
+                    type="email"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="editData.password"
+                    for="password"
+                    label="Password*"
+                    type="password"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-select
+                    label="Pilih Hak Akses"
+                    v-model="editData.id_role"
+                    for="id_role"
+                    :items="role"
+                    item-value="id_role"
+                    item-text="roleName"
+                  >
+                  </v-select>
+                </v-col>
+                </v-row>
+            </v-container>
           <small>*haris diisi</small>
         </v-card-text>
         <v-card-actions>
@@ -117,7 +166,7 @@
           <v-btn
             color="blue darken-2"
             text
-            @click="editAdmin"
+            @click="editAdmin(); getAdmin()"
             :disabled="isAdding"
             :loading="isAdding"
           >{{ isAdding ? "Adding.." : "Edit Admin" }}</v-btn>
@@ -143,15 +192,6 @@
               >Delete</Button>
             </div>
           </Modal>
-          <v-spacer></v-spacer>
-          <v-banner class="text-center">
-            <v-pagination
-              v-model="page"
-              :length="4"
-              prev-icon="mdi-menu-left"
-              next-icon="mdi-menu-right"
-            ></v-pagination>
-          </v-banner>
   </v-card>
 </template>
 
@@ -165,34 +205,24 @@ export default {
         fullName: "",
         email: "",
         password: "",
-        userType: "Admin",
+        id_role: "",
       },
-      select: 'Admin',
-      item: [
-        'Admin',
-        'User',
-      ],
       addModal: false,
       editModal: false,
       isAdding: false,
       users: [],
+      role: [],
       editData: {
         fullName: "",
         email: "",
         password: "",
-        userType: "Admin"
+        id_role: ""
       },
-      select: 'Admin',
-      items: [
-        'Admin',
-        'User',
-      ],
       index: -1,
       showDeleteModal: false,
       isDeleting: false,
       deleteItem: {},
       DeletingIndex: -1,
-      page: 1,
       items: [
         {
           text: 'Home',
@@ -205,9 +235,27 @@ export default {
           href: '/adminusers',
         },
       ],
+      pagination: {
+        page: 1,
+        total: 0,
+        perPage: 0,
+        visible: 7
+      }
     };
   },
   methods: {
+    async getAdmin() {
+      const [user, r] = await Promise.all([
+        this.callApi("get", "app/get_users"),
+        this.callApi("get", "app/get_roles"),
+      ]);
+      if (user.status == 200) {
+        this.users = user.data;
+        this.role = r.data;
+      } else {
+        this.e();
+      }
+    },
     async addAdmin() {
       if (this.data.fullName.trim() == "") {
         return this.swr("Nama Lengkap tidak boleh kosong!!");
@@ -215,8 +263,6 @@ export default {
         return this.swr("Email tidak boleh kosong!!");
       } else if (this.data.password.trim() == "") {
         return this.swr("Password tidak boleh kosong!!");
-      } else if (this.data.userType.trim() == "") {
-        return this.swr("UserType tidak boleh kosong!!");
       }
       const res = await this.callApi("post", "app/create_user", this.data);
 
@@ -227,7 +273,7 @@ export default {
         this.data.fullName = "";
         this.data.email = "";
         this.data.password = "";
-        this.data.userType = "";
+        this.data.id_role= "";
       } else {
         if (res.status === 422) {
           for(let i in res.data.errors){
@@ -243,8 +289,6 @@ export default {
         return this.swr("Nama Lengkap tidak boleh kosong!!");
       } else if (this.editData.email.trim() == "") {
         return this.swr("Email tidak boleh kosong!!");
-      } else if (this.editData.userType.trim() == "") {
-        return this.swr("UserType tidak boleh kosong!!");
       }
       const res = await this.callApi(
         "post",
@@ -255,7 +299,7 @@ export default {
       if (res.status === 200) {
         this.users[this.index].fullName = this.editData.fullName;
         this.users[this.index].email = this.editData.email;
-        this.users[this.index].userType = this.editData.userType;
+        this.users[this.index].id_role = this.editData.id_role;
         this.s("user berhasil diubah");
         this.editModal = false;
       } else {
@@ -273,7 +317,7 @@ export default {
         id: user.id,
         fullName: user.fullName,
         email: user.email,
-        userType: user.userType
+        id_role: user.id_role
       };
       this.editData = obj;
       this.editModal = true;
@@ -302,12 +346,16 @@ export default {
     }
   },
   async created() {
-    const res = await this.callApi("get", "app/get_users");
-    if (res.status == 200) {
-      this.users = res.data;
-    } else {
-      this.e();
-    }
+    const [user, r] = await Promise.all([
+        this.callApi("get", "app/get_users"),
+        this.callApi("get", "app/get_roles"),
+      ]);
+      if (user.status == 200) {
+        this.users = user.data;
+        this.role = r.data;
+      } else {
+        this.e();
+      }
   }
 };
 
