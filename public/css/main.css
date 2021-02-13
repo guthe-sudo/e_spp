@@ -3347,3 +3347,7 @@ section{
   min-height: 100vh;
   background: linear-gradient(-30deg, #03a9f4 0%, #3a78b3 50%, #262626 50%, #606060 100%);
 }
+
+.teguh{
+  width: auto;
+}
